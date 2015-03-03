@@ -18,8 +18,8 @@ public class RestServiceTest extends DatabaseUsingTest {
 
 	@Before
 	public void setUp() {
+		super.setUpDb();
 		target = new RestService();
-		super.setUp();
 		target.setEntityManager(entityManager);  // simulate CDI; EM created in super.
 	}
 
@@ -54,7 +54,7 @@ public class RestServiceTest extends DatabaseUsingTest {
 		
 		transaction.commit();
 		
-		String ret = target.findTaskById(item.getId());
+		String ret = target.findTaskById("User123", item.getId());
 		assertNotNull(ret);
 		System.out.println("RestServiceTest.testGetOneItemg() -> " + ret);
 	}

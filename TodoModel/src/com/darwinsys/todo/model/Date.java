@@ -1,21 +1,28 @@
 package com.darwinsys.todo.model;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.io.Serializable;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import javax.persistence.Embeddable;
 
 /*
  * Simple Date for Tasks: only has Year, Month, and Day.
  * Month is number the human way, starting at one.
  */
-public class Date {
+@Embeddable
+public class Date implements Serializable {
+
+	private static final long serialVersionUID = -5944728253397921658L;
+	
 	int year, month, day;
 
 	/** Construct a Date for today */
 	public Date() {
 		this(new java.util.Date());
 	}
+	
+
 	
 	/** Construct a Date for the given y-m-d */
 	public Date(int year, int month, int day) {
@@ -33,6 +40,13 @@ public class Date {
 
 	/** Construct a date from a YYYY-mm-DD String */
 	public Date(String dateString) {
+		populate(dateString);
+	}
+	
+	private void populate(String dateString) {
+		if (dateString == null) {
+			throw new NullPointerException("dateString may not be null");
+		}
 		Scanner scan = new Scanner(dateString.replace('-', ' '));
 		try {
 			year = scan.nextInt();
@@ -40,6 +54,8 @@ public class Date {
 			day = scan.nextInt();
 		} catch (InputMismatchException e) {
 			throw new IllegalArgumentException("Not YYYY-MM-DD: " + dateString);
+		} finally {
+			scan.close();
 		}
 		validate();
 	}
@@ -54,7 +70,7 @@ public class Date {
 	}
 
 	/** Convert a Date to a java.util.Date() */
-	public java.util.Date getDate() {
+	public java.util.Date asJULDate() {
 		return new java.util.Date(year, month - 1, day);
 	}
 

@@ -2,51 +2,55 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui"
+	xmlns:pf="http://primefaces.org/ui"
 	template="template/template.xhtml">
 
 	<ui:define name="title">ToDo List</ui:define>
 	<ui:define name="body">
 	<h:form>
-		<p:panel>
-			<f:facet name="header">ToDo List for #{remoteUser}</f:facet>
+		<pf:panel>
+			<f:facet name="header">ToDo List for user #{remoteUser}</f:facet>
 
 			<div class="results">
 
-				<p:tabView switchType='ajax'>
-					<p:tab header="All Items">
+				<pf:tabView switchType='ajax'>
+					<pf:tab title="All Tasks">
 						<h:outputText value="No tasks Yet"
-							rendered="#{empty taskList.resultList}" />
-						<p:dataTable id="ToDoList" rules="all"
+							rendered="#{empty todoList.resultList}" />
+						<!--  Cannot use pf:dataTable here, should work, doesn't. -->
+						<h:dataTable id="todoList" border='1' rules="all"
 							var="task" value="#{todoList.resultList}"
 							rendered="#{not empty todoList.resultList}">
 							<h:column>
 								<f:facet name="header">Id</f:facet>
                     			#{task.id}
-                			</h:column>
+                				</h:column>
 							<h:column>
-								<f:facet name="header">Date</f:facet>
-                    			#{task.creation}
-                			</h:column>
+								<f:facet name="header">Date Entered</f:facet>
+                    			#{task.creationDate}
+                				</h:column>
 							<h:column>
 								<f:facet name="header">Detail</f:facet>
                     			#{task.name}
-                			</h:column>
-						</p:dataTable>
-					</p:tab>
+                				</h:column>
+                				<h:column>
+							<f:facet name="header">Priority</f:facet>
+                    			#{task.priority}
+                				</h:column>
+						</h:dataTable>
+					</pf:tab>
 
- 					<p:tab header="Yada yada">
+ 					<pf:tab title="Completed Tasks">
  					Not implemented yet.
- 					</p:tab>
- 					
+ 					</pf:tab>
 
-				</p:tabView>
+				</pf:tabView>
 			</div>
 
-		</p:panel>
+		</pf:panel>
 
 		<div class="actionButtons">
-			<h:button id="done" value="Logout" view="/index.html" />
+			<h:link value="Add Task" outcome="addTask" />
 		</div>
 	</h:form>
 	</ui:define>
